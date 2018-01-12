@@ -19,7 +19,7 @@ class SpinalDrive_Env {
   /**
    * add_navbar_application.
    * 
-   * @param {string} key key string of the layer
+   * @param {string} key key string of the layer: `FolderExplorer` or 'FileExplorer' or `Inspector` or `FileExplorerCurrDir`
    * @param {SpinalDrive_App | any} app should be an SpinalDrive_App
    * @memberof SpinalDrive_Env
    */
