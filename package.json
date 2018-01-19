@@ -2,7 +2,7 @@
   "name": "spinal-env-drive-core",
   "version": "1.0.0",
   "description": "core class to create and add plugin in spinaldrive",
-  "main": "main.js",
+  "main": "index.js",
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
