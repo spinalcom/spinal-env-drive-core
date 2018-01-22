@@ -112,6 +112,7 @@ function main() {
     basedir: process.cwd(),
     lookups: ['dependencies']
   };
+  console.log(opts);
   resolve.packages(["."], opts, function (err, tree) {
     if (err) return console.error(err)
 
