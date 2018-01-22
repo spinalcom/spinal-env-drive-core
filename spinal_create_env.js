@@ -70,7 +70,7 @@ function get_dependencies_tree(filepath, res = {}, _root = res) {
   for (var key in _dependencies) {
     if (_dependencies.hasOwnProperty(key)) {
       // if (reg.test(key)) {
-      if (does_exist_in_tree(root, key) === false) {
+      if (does_exist_in_tree(_root, key) === false) {
         let child = {};
         let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
         get_dependencies_tree(_path, child, _root);
