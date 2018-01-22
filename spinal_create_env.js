@@ -26,6 +26,7 @@
 
 var fs = require('fs');
 var path = require('path');
+const resolve = require('resolve-tree')
 
 var pakage_path = path.resolve('./package.json');
 var node_modules_path = path.resolve('..');
@@ -104,9 +105,20 @@ function main() {
   if (fs.existsSync(templatePath)) {
     copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates'));
   }
-  var dependencies_tree = get_dependencies_tree(pakage_path);
-  var dependencies = flatten_dependencies_tree(dependencies_tree);
-  console.log(dependencies);
+  // var dependencies_tree = get_dependencies_tree(pakage_path);
+  // var dependencies = flatten_dependencies_tree(dependencies_tree);
+  // console.log(dependencies);
+  const opts = {
+    basedir: process.cwd(),
+    lookups: ['dependencies']
+  };
+  resolve.packages(["."], opts, function (err, tree) {
+    if (err) return console.error(err)
+
+    const json = JSON.stringify(tree, null, 2)
+    console.log(json)
+  });
+
 
 
 }
