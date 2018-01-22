@@ -26,7 +26,6 @@
 
 var fs = require('fs');
 var path = require('path');
-const resolve = require('resolve-tree')
 
 var pakage_path = path.resolve('./package.json');
 var node_modules_path = path.resolve('..');
@@ -72,8 +71,8 @@ function get_dependencies_tree(filepath, res = []) {
       return res;
   }
   res.push({
-    name = _package.name,
-    dependencies = _dependencies
+    name: _package.name,
+    dependencies: _dependencies
   });
   for (var key in _dependencies) {
     if (_dependencies.hasOwnProperty(key)) {
@@ -139,7 +138,7 @@ function main() {
 
   //   const json = JSON.stringify(tree, null, 2)
   //   console.log(json)
-});
+  // });
 
 
 
