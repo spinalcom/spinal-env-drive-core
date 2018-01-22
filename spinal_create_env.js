@@ -53,12 +53,12 @@ function get_dependencies_tree(filepath, res = {}) {
   var _dependencies = _package.dependencies;
   for (var key in _dependencies) {
     if (_dependencies.hasOwnProperty(key)) {
-      if (reg.test(key)) {
-        let child = {};
-        let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
-        get_dependencies_tree(_path, child);
-        res[key] = child;
-      }
+      // if (reg.test(key)) {
+      let child = {};
+      let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
+      get_dependencies_tree(_path, child);
+      res[key] = child;
+      // }
     }
   }
   return res;
@@ -69,7 +69,9 @@ function flatten_dependencies_tree(tree, res = []) {
   for (var key in tree) {
     if (tree.hasOwnProperty(key)) {
       res = flatten_dependencies_tree(tree[key], res);
-      res.push(key);
+      if (reg.test(key)) {
+        res.push(key);
+      }
     }
   }
   // remove duplicate
@@ -85,10 +87,10 @@ function main() {
     copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates'));
   }
   var dependencies_tree = get_dependencies_tree(pakage_path);
-  console.log(dependencies_tree);
-  console.log("-- flatten --");
-  var dependencies = flatten_dependencies_tree(dependencies_tree)
+  var dependencies = flatten_dependencies_tree(dependencies_tree);
   console.log(dependencies);
+
+
 }
 
 main();
