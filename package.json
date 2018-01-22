@@ -1,14 +1,9 @@
 {
-<<<<<<< HEAD
   "name": "spinal-env-drive-core",
-=======
-  "name": "spinal-lib-drive-env",
->>>>>>> 0b4d5eacc54270f178ce4ea9ef83df33eb8f40f2
   "version": "1.0.0",
   "description": "core class to create and add plugin in spinaldrive",
   "main": "index.js",
   "dependencies": {
-<<<<<<< HEAD
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-plugin-transform-es2015-classes": "^6.24.1",
@@ -29,17 +24,4 @@
   "license": "SEE LICENSE IN license.pdf",
   "src": ["main.js"],
   "templates": []
-=======
-    "spinal-env-drive-core": "https://github.com/spinalcom/spinal-env-drive-core.git",
-    "spinal-env-drive-plugin-base": "https://github.com/spinalcom/spinal-env-drive-plugin-base.git"
-
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "spinal_create_env"
-  },
-  "author": "Laurent HA TAM DAN",
-  "license": "SEE LICENSE IN license.pdf"
->>>>>>> 0b4d5eacc54270f178ce4ea9ef83df33eb8f40f2
 }

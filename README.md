@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # spinal-env-drive-core
 
 ## Classes
@@ -184,6 +183,3 @@ method to know if the app is needed to be shown.
 | --- | --- | --- |
 | d | <code>Object</code> | object representing selection |
 
-=======
-# spinal-lib-drive-env
->>>>>>> 0b4d5eacc54270f178ce4ea9ef83df33eb8f40f2

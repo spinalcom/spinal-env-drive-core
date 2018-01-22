@@ -22,22 +22,8 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-<<<<<<< HEAD
 module.exports = {};
 
 module.exports.SpinalDrive_App_list = require("./core/SpinalDrive_App_list");
 module.exports.SpinalDrive_App = require("./core/SpinalDrive_App");
 module.exports.SpinalDrive_Env = require("./core/SpinalDrive_Env");
-=======
-
-function concat_lib(lib) {
-  for (var key in lib) {
-    module.exports[key] = lib[key];
-  }
-}
-
-module.exports = {};
-
-concat_lib(require('spinal-env-drive-core'));
-concat_lib(require('spinal-env-drive-base'));
->>>>>>> 0b4d5eacc54270f178ce4ea9ef83df33eb8f40f2
