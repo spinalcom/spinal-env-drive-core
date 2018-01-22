@@ -71,7 +71,7 @@ function flatten_dependencies_tree(tree, res = []) {
   // push child
   for (var key in tree) {
     if (tree.hasOwnProperty(key)) {
-      res.push("key");
+      res.push(key);
       flatten_dependencies_tree(tree[key], res);
     }
   }
