@@ -48,6 +48,8 @@ function create_folder_if_not_exit(params) {
 }
 
 function does_exist_in_tree(tree, name) {
+  console.log(name);
+  console.log(tree);
   if (typeof tree[name] === "undefined") {
     for (var key in tree) {
       if (tree.hasOwnProperty(key)) {
