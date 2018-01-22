@@ -73,8 +73,9 @@ function flatten_dependencies_tree(tree, res = []) {
     }
   }
   // remove duplicate
-  res.filter((v, i, a) => a.indexOf(v) === i);
-  return res;
+  return res.filter((v, i, a) => {
+    return a.indexOf(v) === i;
+  });
 }
 
 function main() {
