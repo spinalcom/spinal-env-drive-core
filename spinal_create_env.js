@@ -47,8 +47,8 @@ function create_folder_if_not_exit(params) {
   }
 }
 
-function get_dependencies(path, res) {
-  var _package = JSON.parse(fs.readFileSync(path, 'utf8'));
+function get_dependencies(filepath, res) {
+  var _package = JSON.parse(fs.readFileSync(filepath, 'utf8'));
   var _name = _package.name;
   var _dependencies = _package.dependencies;
   for (var key in _dependencies) {
