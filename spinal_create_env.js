@@ -68,8 +68,8 @@ function flatten_dependencies_tree(tree, res = []) {
   // push child
   for (var key in tree) {
     if (tree.hasOwnProperty(key)) {
+      res = flatten_dependencies_tree(tree[key], res);
       res.push(key);
-      flatten_dependencies_tree(tree[key], res);
     }
   }
   // remove duplicate
