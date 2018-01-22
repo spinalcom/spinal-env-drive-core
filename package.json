@@ -17,6 +17,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "spinal_create_env": "spinal_create_env.js"
+  },
   "author": "Laurent HA TAM DAN",
   "license": "SEE LICENSE IN license.pdf",
   "src": ["main.js"],
