@@ -47,7 +47,7 @@ function create_folder_if_not_exit(params) {
   }
 }
 
-function get_dependencies(filepath, res) {
+function get_dependencies_tree(filepath, res = {}) {
   var _package = JSON.parse(fs.readFileSync(filepath, 'utf8'));
   var _name = _package.name;
   var _dependencies = _package.dependencies;
@@ -56,11 +56,26 @@ function get_dependencies(filepath, res) {
       if (reg.test(key)) {
         let child = {};
         let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
-        get_dependencies(_path, child);
+        get_dependencies_tree(_path, child);
         res[key] = child;
       }
     }
   }
+  return res;
+}
+
+function flatten_dependencies_tree(tree, res = []) {
+  // remove duplicate
+  res.filter((v, i, a) => a.indexOf(v) === i);
+
+  // push child
+  for (var key in tree) {
+    if (tree.hasOwnProperty(key)) {
+      res.push("key");
+      flatten_dependencies_tree(tree[key], res);
+    }
+  }
+  return res;
 }
 
 function main() {
@@ -69,9 +84,11 @@ function main() {
   if (fs.existsSync(templatePath)) {
     copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates'));
   }
-  var dependencies_tree = {};
-  get_dependencies(pakage_path, dependencies_tree);
+  var dependencies_tree = get_dependencies_tree(pakage_path);
   console.log(dependencies_tree);
+  console.log("-- flatten --");
+  var dependencies = flatten_dependencies_tree(dependencies_tree)
+  console.log(dependencies);
 }
 
 main();
