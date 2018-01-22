@@ -47,7 +47,20 @@ function create_folder_if_not_exit(params) {
   }
 }
 
-function get_dependencies_tree(filepath, res = {}) {
+function does_exist_in_tree(tree, name) {
+  if (typeof tree[name] === "undefined") {
+    for (var key in tree) {
+      if (tree.hasOwnProperty(key)) {
+        return does_exist_in_tree(tree[key], name);
+      }
+    }
+    return true;
+  }
+  return false;
+
+}
+
+function get_dependencies_tree(filepath, res = {}, _root = res) {
   var _package = JSON.parse(fs.readFileSync(filepath, 'utf8'));
   var _name = _package.name;
   var _dependencies = _package.dependencies;
@@ -56,7 +69,7 @@ function get_dependencies_tree(filepath, res = {}) {
       // if (reg.test(key)) {
       let child = {};
       let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
-      get_dependencies_tree(_path, child);
+      get_dependencies_tree(_path, child, _root);
       res[key] = child;
       // }
     }
