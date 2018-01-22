@@ -19,5 +19,6 @@
   },
   "author": "Laurent HA TAM DAN",
   "license": "SEE LICENSE IN license.pdf",
-  "src": ["main.js"]
+  "src": ["main.js"],
+  "templates": []
 }
