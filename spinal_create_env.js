@@ -65,9 +65,6 @@ function get_dependencies_tree(filepath, res = {}) {
 }
 
 function flatten_dependencies_tree(tree, res = []) {
-  // remove duplicate
-  res.filter((v, i, a) => a.indexOf(v) === i);
-
   // push child
   for (var key in tree) {
     if (tree.hasOwnProperty(key)) {
@@ -75,6 +72,8 @@ function flatten_dependencies_tree(tree, res = []) {
       flatten_dependencies_tree(tree[key], res);
     }
   }
+  // remove duplicate
+  res.filter((v, i, a) => a.indexOf(v) === i);
   return res;
 }
 
