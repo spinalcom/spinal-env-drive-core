@@ -64,6 +64,7 @@ function does_exist_in_tree(tree, name) {
 }
 
 function get_dependencies_tree(filepath, res = []) {
+  if (!fs.existsSync(filepath)) return res;
   var _package = JSON.parse(fs.readFileSync(filepath, 'utf8'));
   var _dependencies = _package.dependencies;
   for (var i = 0; i < res.length; i++) {
