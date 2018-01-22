@@ -72,9 +72,9 @@ function get_dependencies_tree(filepath, res = {}, _root = res) {
       // if (reg.test(key)) {
       if (does_exist_in_tree(_root, key) === false) {
         let child = {};
+        res[key] = child;
         let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
         get_dependencies_tree(_path, child, _root);
-        res[key] = child;
       }
       // }
     }
