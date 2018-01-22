@@ -64,23 +64,43 @@ function does_exist_in_tree(tree, name) {
 
 }
 
-function get_dependencies_tree(filepath, res = {}, _root = res) {
+function get_dependencies_tree(filepath, res = []) {
   var _package = JSON.parse(fs.readFileSync(filepath, 'utf8'));
-  var _name = _package.name;
   var _dependencies = _package.dependencies;
+  for (var i = 0; i < res.length; i++) {
+    if (res[i].name === _package.name)
+      return res;
+  }
+  res.push({
+    name = _package.name,
+    dependencies = _dependencies
+  });
   for (var key in _dependencies) {
     if (_dependencies.hasOwnProperty(key)) {
-      // if (reg.test(key)) {
-      if (does_exist_in_tree(_root, key) === false) {
-        let child = {};
-        res[key] = child;
-        let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
-        get_dependencies_tree(_path, child, _root);
-      }
-      // }
+      let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
+      get_dependencies_tree(_path, res);
     }
   }
+
   return res;
+
+
+  // var _package = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+  // var _name = _package.name;
+  // var _dependencies = _package.dependencies;
+  // for (var key in _dependencies) {
+  //   if (_dependencies.hasOwnProperty(key)) {
+  //     // if (reg.test(key)) {
+  //     if (does_exist_in_tree(_root, key) === false) {
+  //       let child = {};
+  //       res[key] = child;
+  //       let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
+  //       get_dependencies_tree(_path, child, _root);
+  //     }
+  //     // }
+  //   }
+  // }
+  // return res;
 }
 
 function flatten_dependencies_tree(tree, res = []) {
@@ -105,20 +125,21 @@ function main() {
   if (fs.existsSync(templatePath)) {
     copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates'));
   }
-  // var dependencies_tree = get_dependencies_tree(pakage_path);
+  var dependencies_tree = get_dependencies_tree(pakage_path);
+  console.log(dependencies_tree);
   // var dependencies = flatten_dependencies_tree(dependencies_tree);
   // console.log(dependencies);
-  const opts = {
-    basedir: process.cwd(),
-    lookups: ['dependencies']
-  };
-  console.log(opts);
-  resolve.packages(["."], opts, function (err, tree) {
-    if (err) return console.error(err)
+  // const opts = {
+  //   basedir: process.cwd(),
+  //   lookups: ['dependencies']
+  // };
+  // console.log(opts);
+  // resolve.packages(["."], opts, function (err, tree) {
+  //   if (err) return console.error(err)
 
-    const json = JSON.stringify(tree, null, 2)
-    console.log(json)
-  });
+  //   const json = JSON.stringify(tree, null, 2)
+  //   console.log(json)
+});
 
 
 
