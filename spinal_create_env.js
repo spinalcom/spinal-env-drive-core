@@ -51,7 +51,8 @@ function does_exist_in_tree(tree, name) {
   if (typeof tree[name] === "undefined") {
     for (var key in tree) {
       if (tree.hasOwnProperty(key)) {
-        return does_exist_in_tree(tree[key], name);
+        if (does_exist_in_tree(tree[key], name) === false)
+          return false;
       }
     }
     return true;
