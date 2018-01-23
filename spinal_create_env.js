@@ -151,15 +151,15 @@ function main() {
       copy_template(spinal_dependencies[y]);
       console.log("END COPY");
     }
-    // b.add(script);
-    // b.transform("babelify", {
-    //   presets: ["es2015"]
-    // });
-    // b.transform("windowify");
-    // b.transform("uglifyify");
-    // var output_name = path.resolve(browserPath + '/lib/' + "spinal-lib-drive-env.js");
-    // var output = fs.createWriteStream(output_name);
-    // b.bundle().pipe(output);
+    b.add(script);
+    b.transform("babelify", {
+      presets: ["es2015"]
+    });
+    b.transform("windowify");
+    b.transform("uglifyify");
+    var output_name = path.resolve(browserPath + '/lib/' + "spinal-lib-drive-env.js");
+    var output = fs.createWriteStream(output_name);
+    b.bundle().pipe(output);
   }
 }
 
