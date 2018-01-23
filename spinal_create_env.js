@@ -64,21 +64,29 @@ function does_exist_in_tree(tree, name) {
 }
 
 function get_dependencies_tree(filepath, res = []) {
+  var key, i;
   if (!fs.existsSync(filepath)) return res;
   var _package = JSON.parse(fs.readFileSync(filepath, 'utf8'));
   var _dependencies = _package.dependencies;
-  for (var i = 0; i < res.length; i++) {
+  for (i = 0; i < res.length; i++) {
     if (res[i].name === _package.name)
       return res;
   }
   res.push({
     name: _package.name,
-    dependencies: _dependencies
+    dependencies: []
   });
-  for (var key in _dependencies) {
+  for (key in _dependencies) {
     if (_dependencies.hasOwnProperty(key)) {
       let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
       get_dependencies_tree(_path, res);
+
+      for (i = 0; i < res.length; i++) {
+        if (res[i].name === key) {
+          res.dependencies.push(res[i]);
+          break;
+        }
+      }
     }
   }
 
@@ -104,19 +112,38 @@ function get_dependencies_tree(filepath, res = []) {
 }
 
 function flatten_dependencies_tree(tree, res = []) {
-  // push child
-  for (var key in tree) {
-    if (tree.hasOwnProperty(key)) {
-      res = flatten_dependencies_tree(tree[key], res);
-      if (reg.test(key)) {
-        res.push(key);
-      }
+  return tree.reduce(function (buf, pkg) {
+    buf.push(pkg);
+    if (Array.isArray(pkg.dependencies)) {
+      flatten(pkg.dependencies, buf);
     }
-  }
-  // remove duplicate
-  return res.filter((v, i, a) => {
-    return a.indexOf(v) === i;
-  });
+    return buf;
+  }, buf || []);
+
+  // push child
+  // for (var i = 0; i < tree.length; i++) {
+  //   // res = flatten_dependencies_tree(tree[i], res);
+  //   if (reg.test(tree[i].name)) {
+  //     for (var key in tree[i].dependencies) {
+  //       if (tree[i].dependencies.hasOwnProperty(key)) {
+  //         res.push(key);
+  //       }
+  //     }
+  //     res.push(tree[i].name);
+  //   }
+  // }
+  // // for (var key in tree) {
+  // //   if (tree.hasOwnProperty(key)) {
+  // //     res = flatten_dependencies_tree(tree[key], res);
+  // //     if (reg.test(key)) {
+  // //       res.push(key);
+  // //     }
+  // //   }
+  // // }
+  // // remove duplicate
+  // return res.filter((v, i, a) => {
+  //   return a.indexOf(v) === i;
+  // }) || [];
 }
 
 function main() {
@@ -127,8 +154,8 @@ function main() {
   }
   var dependencies_tree = get_dependencies_tree(pakage_path);
   console.log(dependencies_tree);
-  // var dependencies = flatten_dependencies_tree(dependencies_tree);
-  // console.log(dependencies);
+  var dependencies = flatten_dependencies_tree(dependencies_tree);
+  console.log(dependencies);
   // const opts = {
   //   basedir: process.cwd(),
   //   lookups: ['dependencies']
