@@ -95,9 +95,8 @@ function flatten_dependencies_tree(tree, mod, buf = []) {
   return buf;
 }
 
-function concat_module(mod) {
+function copy_template(mod) {
   var pack = require(path.resolve('../' + mod + '/package.json'));
-  b.add(path.resolve('../' + mod + '/' + pack.main));
   var templatePath = path.resolve('../' + mod + '/templates');
   var exist = fs.existsSync(templatePath);
   console.log(templatePath);
@@ -148,16 +147,19 @@ function main() {
 
     // 
     for (var y = 0; y < spinal_dependencies.length; y++) {
-      concat_module(spinal_dependencies[y]);
+      console.log("START COPY");
+      copy_template(spinal_dependencies[y]);
+      console.log("END COPY");
     }
-    b.transform("babelify", {
-      presets: ["es2015"]
-    });
-    b.transform("windowify");
-    b.transform("uglifyify");
-    var output_name = path.resolve(browserPath + '/lib/' + "spinal-lib-drive-env.js");
-    var output = fs.createWriteStream(output_name);
-    b.bundle().pipe(output);
+    // b.add(script);
+    // b.transform("babelify", {
+    //   presets: ["es2015"]
+    // });
+    // b.transform("windowify");
+    // b.transform("uglifyify");
+    // var output_name = path.resolve(browserPath + '/lib/' + "spinal-lib-drive-env.js");
+    // var output = fs.createWriteStream(output_name);
+    // b.bundle().pipe(output);
   }
 }
 
