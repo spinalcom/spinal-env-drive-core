@@ -26,10 +26,13 @@
 
 var fs = require('fs');
 var path = require('path');
-const resolve = require('resolve-tree')
 
 var pakage_path = path.resolve('./package.json');
 var node_modules_path = path.resolve('..');
+var browserify = require('browserify');
+var b = browserify({
+  debug: true
+});
 
 var browserPath = path.resolve('../../.browser_organs');
 var name = JSON.parse(fs.readFileSync(pakage_path, 'utf8')).name;
@@ -46,22 +49,6 @@ function create_folder_if_not_exit(params) {
   if (!fs.existsSync(params)) {
     fs.mkdirSync(params);
   }
-}
-
-function does_exist_in_tree(tree, name) {
-  console.log(name);
-  console.log(tree);
-  if (typeof tree[name] === "undefined") {
-    for (var key in tree) {
-      if (tree.hasOwnProperty(key)) {
-        if (does_exist_in_tree(tree[key], name) === true)
-          return true;
-      }
-    }
-    return false;
-  }
-  return true;
-
 }
 
 function get_dependencies_tree(filepath, res = []) {
@@ -93,99 +80,66 @@ function get_dependencies_tree(filepath, res = []) {
   }
 
   return res;
-
-
-  // var _package = JSON.parse(fs.readFileSync(filepath, 'utf8'));
-  // var _name = _package.name;
-  // var _dependencies = _package.dependencies;
-  // for (var key in _dependencies) {
-  //   if (_dependencies.hasOwnProperty(key)) {
-  //     // if (reg.test(key)) {
-  //     if (does_exist_in_tree(_root, key) === false) {
-  //       let child = {};
-  //       res[key] = child;
-  //       let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
-  //       get_dependencies_tree(_path, child, _root);
-  //     }
-  //     // }
-  //   }
-  // }
-  // return res;
 }
 
-function flatten_dependencies_tree(tree, buf = []) {
+function flatten_dependencies_tree(tree, mod, buf = []) {
+  buf.push(mod.name);
   for (var i = 0; i < tree.length; i++) {
-    tree[i]
+    if (!tree[i]._visit) {
+      tree[i]._visit = true;
+      for (var y = 0; y < tree[i].dependencies.length; y++) {
+        flatten_dependencies_tree(tree, tree[i].dependencies[y], buf);
+      }
+    }
+  }
+  return buf;
+}
+
+function concat_module(mod) {
+  var pack = require(path.resolve('../' + mod + '/package.json'));
+  b.add(path.resolve('../' + mod + pack.main));
+  var templatePath = path.resolve('../' + mod + '/templates');
+  if (fs.existsSync(templatePath)) {
+    templatePath = path.resolve('../' + mod + '/templates/' + name);
+    copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates/' + name));
+
   }
 
-
-
-
-
-
-
-
-
-
-
-  // return tree.reduce(function (buf, pkg) {
-  //   buf.push(pkg);
-  //   if (Array.isArray(pkg.dependencies)) {
-  //     flatten_dependencies_tree(pkg.dependencies, buf);
-  //   }
-  //   return buf;
-  // }, buf || []);
-
-  // push child
-  // for (var i = 0; i < tree.length; i++) {
-  //   // res = flatten_dependencies_tree(tree[i], res);
-  //   if (reg.test(tree[i].name)) {
-  //     for (var key in tree[i].dependencies) {
-  //       if (tree[i].dependencies.hasOwnProperty(key)) {
-  //         res.push(key);
-  //       }
-  //     }
-  //     res.push(tree[i].name);
-  //   }
-  // }
-  // // for (var key in tree) {
-  // //   if (tree.hasOwnProperty(key)) {
-  // //     res = flatten_dependencies_tree(tree[key], res);
-  // //     if (reg.test(key)) {
-  // //       res.push(key);
-  // //     }
-  // //   }
-  // // }
-  // // remove duplicate
-  // return res.filter((v, i, a) => {
-  //   return a.indexOf(v) === i;
-  // }) || [];
 }
 
 function main() {
+  var _root;
   create_browser_folder();
-  var templatePath = path.resolve('./templates');
-  if (fs.existsSync(templatePath)) {
-    copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates'));
+  // var templatePath = path.resolve('./templates');
+  // if (fs.existsSync(templatePath)) {
+  //   copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates'));
+  // }
+  var dependencies_tree = get_dependencies_tree(pakage_path);
+  for (var i = 0; i < dependencies_tree.length; i++) {
+    if (dependencies_tree[i].name === name) {
+      _root = dependencies_tree[i];
+    }
   }
-  // var dependencies_tree = get_dependencies_tree(pakage_path);
-  // console.log(dependencies_tree);
-  // var dependencies = flatten_dependencies_tree(dependencies_tree);
-  // console.log(dependencies);
-  const opts = {
-    basedir: path.resolve('../..'),
-    lookups: ['dependencies']
-  };
-  console.log(opts);
-  resolve.packages(["."], opts, function (err, tree) {
-    if (err) return console.error(err)
+  if (_root) {
+    var dependencies = flatten_dependencies_tree(dependencies_tree, _root);
+    var spinal_dependencies = dependencies.filter((obj) => {
+      return reg.test(obj);
+    }).reverse();
+    console.log(spinal_dependencies);
 
-    const json = JSON.stringify(tree, null, 2)
-    console.log(json)
-  });
-
-
-
+    // 
+    for (var y = 0; y < spinal_dependencies.length; y++) {
+      concat_module(spinal_dependencies[y]);
+    }
+    b.transform("babelify", {
+      presets: ["es2015"]
+    });
+    b.transform("windowify");
+    b.transform("uglifyify");
+    var output_name = path.resolve(browserPath + '/lib/' + "spinal-lib-drive-env.js");
+    var output = fs.createWriteStream(output_name);
+    b.bundle().pipe(output);
+  }
 }
 
 main();
