@@ -112,7 +112,7 @@ function get_dependencies_tree(filepath, res = []) {
   // return res;
 }
 
-function flatten_dependencies_tree(tree, res = []) {
+function flatten_dependencies_tree(tree, buff = []) {
   return tree.reduce(function (buf, pkg) {
     buf.push(pkg);
     if (Array.isArray(pkg.dependencies)) {
