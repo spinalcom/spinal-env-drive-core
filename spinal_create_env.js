@@ -38,6 +38,7 @@ var browserPath = path.resolve('../../.browser_organs');
 var name = JSON.parse(fs.readFileSync(pakage_path, 'utf8')).name;
 var script = JSON.parse(fs.readFileSync(pakage_path, 'utf8')).main;
 var reg = /spinal-env-[-_\w]*/;
+var output_name = path.resolve(browserPath + '/lib/' + "spinal-lib-drive-env.js");
 
 function create_browser_folder() {
   create_folder_if_not_exit(browserPath);
@@ -99,13 +100,9 @@ function copy_template(mod) {
   var pack = require(path.resolve('../' + mod + '/package.json'));
   var templatePath = path.resolve('../' + mod + '/templates');
   var exist = fs.existsSync(templatePath);
-  console.log(templatePath);
-  console.log(exist);
   if (exist === true) {
-
     templatePath = path.resolve('../' + mod + '/templates/' + pack.name);
     copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates/' + pack.name));
-
   }
 
 }
@@ -128,10 +125,6 @@ function copyRecursiveSync(src, dest) {
 function main() {
   var _root;
   create_browser_folder();
-  // var templatePath = path.resolve('./templates');
-  // if (fs.existsSync(templatePath)) {
-  //   copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates'));
-  // }
   var dependencies_tree = get_dependencies_tree(pakage_path);
   for (var i = 0; i < dependencies_tree.length; i++) {
     if (dependencies_tree[i].name === name) {
@@ -143,16 +136,12 @@ function main() {
     var spinal_dependencies = dependencies.filter((obj) => {
       return reg.test(obj);
     }).reverse();
-    console.log(spinal_dependencies);
-
-    // 
     for (var y = 0; y < spinal_dependencies.length; y++) {
-      console.log("START COPY");
       copy_template(spinal_dependencies[y]);
-      console.log("END COPY");
     }
+    console.log("compiling : " + output_name);
+    console.log(spinal_dependencies);
     var scriptPath = path.resolve(script)
-    console.log(scriptPath);
     b.add(scriptPath);
     b.transform("babelify", {
       presets: ["es2015"]

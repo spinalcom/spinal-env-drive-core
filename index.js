@@ -27,3 +27,6 @@ module.exports = {};
 module.exports.SpinalDrive_App_list = require("./core/SpinalDrive_App_list");
 module.exports.SpinalDrive_App = require("./core/SpinalDrive_App");
 module.exports.SpinalDrive_Env = require("./core/SpinalDrive_Env");
+var spinalDrive_Env = new SpinalDrive_Env();
+if (window)
+  window.spinalDrive_Env = spinalDrive_Env;
