@@ -97,7 +97,7 @@ function flatten_dependencies_tree(tree, mod, buf = []) {
 
 function concat_module(mod) {
   var pack = require(path.resolve('../' + mod + '/package.json'));
-  b.add(path.resolve('../' + mod + pack.main));
+  b.add(path.resolve('../' + mod + '/' + pack.main));
   var templatePath = path.resolve('../' + mod + '/templates');
   var exist = fs.existsSync(templatePath);
   console.log(templatePath);
