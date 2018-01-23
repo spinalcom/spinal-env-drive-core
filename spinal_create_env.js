@@ -113,13 +113,27 @@ function get_dependencies_tree(filepath, res = []) {
 }
 
 function flatten_dependencies_tree(tree, buf = []) {
-  return tree.reduce(function (buf, pkg) {
-    buf.push(pkg);
-    if (Array.isArray(pkg.dependencies)) {
-      flatten_dependencies_tree(pkg.dependencies, buf);
-    }
-    return buf;
-  }, buf || []);
+  for (var i = 0; i < tree.length; i++) {
+    tree[i]
+  }
+
+
+
+
+
+
+
+
+
+
+
+  // return tree.reduce(function (buf, pkg) {
+  //   buf.push(pkg);
+  //   if (Array.isArray(pkg.dependencies)) {
+  //     flatten_dependencies_tree(pkg.dependencies, buf);
+  //   }
+  //   return buf;
+  // }, buf || []);
 
   // push child
   // for (var i = 0; i < tree.length; i++) {
@@ -153,21 +167,21 @@ function main() {
   if (fs.existsSync(templatePath)) {
     copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates'));
   }
-  var dependencies_tree = get_dependencies_tree(pakage_path);
-  console.log(dependencies_tree);
-  var dependencies = flatten_dependencies_tree(dependencies_tree);
-  console.log(dependencies);
-  // const opts = {
-  //   basedir: process.cwd(),
-  //   lookups: ['dependencies']
-  // };
-  // console.log(opts);
-  // resolve.packages(["."], opts, function (err, tree) {
-  //   if (err) return console.error(err)
+  // var dependencies_tree = get_dependencies_tree(pakage_path);
+  // console.log(dependencies_tree);
+  // var dependencies = flatten_dependencies_tree(dependencies_tree);
+  // console.log(dependencies);
+  const opts = {
+    basedir: path.resolve('../..'),
+    lookups: ['dependencies']
+  };
+  console.log(opts);
+  resolve.packages(["."], opts, function (err, tree) {
+    if (err) return console.error(err)
 
-  //   const json = JSON.stringify(tree, null, 2)
-  //   console.log(json)
-  // });
+    const json = JSON.stringify(tree, null, 2)
+    console.log(json)
+  });
 
 
 
