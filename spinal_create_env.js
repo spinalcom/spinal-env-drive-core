@@ -64,7 +64,7 @@ function does_exist_in_tree(tree, name) {
 }
 
 function get_dependencies_tree(filepath, res = []) {
-  var key, i;
+  var key, i, mod;
   if (!fs.existsSync(filepath)) return res;
   var _package = JSON.parse(fs.readFileSync(filepath, 'utf8'));
   var _dependencies = _package.dependencies;
@@ -72,10 +72,11 @@ function get_dependencies_tree(filepath, res = []) {
     if (res[i].name === _package.name)
       return res;
   }
-  res.push({
+  mod = {
     name: _package.name,
     dependencies: []
-  });
+  };
+  res.push(mod);
   for (key in _dependencies) {
     if (_dependencies.hasOwnProperty(key)) {
       let _path = path.resolve(node_modules_path + '/' + key + "/package.json");
@@ -83,7 +84,7 @@ function get_dependencies_tree(filepath, res = []) {
 
       for (i = 0; i < res.length; i++) {
         if (res[i].name === key) {
-          res.dependencies.push(res[i]);
+          mod.dependencies.push(res[i]);
           break;
         }
       }
