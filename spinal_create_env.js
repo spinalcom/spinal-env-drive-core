@@ -152,7 +152,7 @@ function main() {
       console.log("END COPY");
     }
     console.log(script);
-    b.add(script);
+    b.add(path.resolve(script));
     b.transform("babelify", {
       presets: ["es2015"]
     });
