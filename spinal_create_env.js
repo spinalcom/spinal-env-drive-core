@@ -116,7 +116,7 @@ function flatten_dependencies_tree(tree, buf = []) {
   return tree.reduce(function (buf, pkg) {
     buf.push(pkg);
     if (Array.isArray(pkg.dependencies)) {
-      flatten(pkg.dependencies, buf);
+      flatten_dependencies_tree(pkg.dependencies, buf);
     }
     return buf;
   }, buf || []);
