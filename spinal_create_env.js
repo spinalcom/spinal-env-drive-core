@@ -26,6 +26,7 @@
 
 var fs = require('fs');
 var path = require('path');
+const resolve = require('resolve-tree')
 
 var pakage_path = path.resolve('./package.json');
 var node_modules_path = path.resolve('..');
