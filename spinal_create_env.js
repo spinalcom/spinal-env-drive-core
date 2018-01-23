@@ -151,8 +151,9 @@ function main() {
       copy_template(spinal_dependencies[y]);
       console.log("END COPY");
     }
-    console.log(script);
-    b.add(path.resolve(script));
+    var scriptPath = path.resolve(script)
+    console.log(scriptPath);
+    b.add(scriptPath);
     b.transform("babelify", {
       presets: ["es2015"]
     });
