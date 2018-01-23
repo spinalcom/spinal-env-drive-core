@@ -102,10 +102,10 @@ function concat_module(mod) {
   var exist = fs.existsSync(templatePath);
   console.log(templatePath);
   console.log(exist);
-  if (exist) {
+  if (exist === true) {
 
-    templatePath = path.resolve('../' + mod + '/templates/' + name);
-    copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates/' + name));
+    templatePath = path.resolve('../' + mod + '/templates/' + pack.name);
+    copyRecursiveSync(templatePath, path.resolve(browserPath + '/templates/' + pack.name));
 
   }
 
