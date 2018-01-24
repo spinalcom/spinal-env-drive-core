@@ -139,16 +139,16 @@ function main() {
     for (var y = 0; y < spinal_dependencies.length; y++) {
       copy_template(spinal_dependencies[y]);
     }
+    var scriptPath = path.resolve(script)
+    var output_name = path.resolve(browserPath + '/lib/' + "spinal-lib-drive-env.js");
     console.log("compiling : " + output_name);
     console.log(spinal_dependencies);
-    var scriptPath = path.resolve(script)
     b.add(scriptPath);
     b.transform("babelify", {
       presets: ["es2015"]
     });
     b.transform("windowify");
     b.transform("uglifyify");
-    var output_name = path.resolve(browserPath + '/lib/' + "spinal-lib-drive-env.js");
     var output = fs.createWriteStream(output_name);
     b.bundle().pipe(output);
   }
