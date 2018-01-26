@@ -3,23 +3,14 @@
   "version": "1.0.0",
   "description": "core class to create and add plugin in spinaldrive",
   "main": "index.js",
-  "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-plugin-transform-es2015-classes": "^6.24.1",
-    "babel-preset-es2015": "^6.24.1",
-    "babelify": "^8.0.0",
-    "browserify": "^14.5.0",
-    "resolve-tree": "^0.1.13",
-    "uglifyify": "^4.0.5",
-    "windowify": "^0.3.0"
-  },
+  "dependencies": {},
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "bin": {
-    "spinal_create_env": "spinal_create_env.js"
+    "create_plugin_template": "create_plugin_template.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "create_plugin_template"
   },
   "author": "Laurent HA TAM DAN",
   "license": "SEE LICENSE IN license.pdf",
