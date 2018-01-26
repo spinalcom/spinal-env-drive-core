@@ -49,6 +49,12 @@ function main() {
   }
 }
 
+function create_folder_if_not_exit(params) {
+  if (!fs.existsSync(params)) {
+    fs.mkdirSync(params);
+  }
+}
+
 function copyRecursiveSync(src, dest) {
   var exists = fs.existsSync(src);
   var stats = exists && fs.statSync(src);
