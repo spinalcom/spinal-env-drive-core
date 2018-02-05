@@ -58,14 +58,23 @@ function create_folder_if_not_exit(params) {
 function copyRecursiveSync(src, dest) {
   var exists = fs.existsSync(src);
   var stats = exists && fs.statSync(src);
+
+  var destExists = fs.existsSync(dest);
+  var destStats = destExists && fs.statSync(dest);
+  var destIsDirectory = destExists && destStats.isDirectory();
+
   var isDirectory = exists && stats.isDirectory();
   if (exists && isDirectory) {
-    fs.mkdirSync(dest);
+    if (!destIsDirectory) {
+      fs.mkdirSync(dest);
+    }
     fs.readdirSync(src).forEach(function (childItemName) {
       copyRecursiveSync(path.join(src, childItemName),
         path.join(dest, childItemName));
     });
   } else {
+    if (destExists)
+      fs.unlinkSync(dest);
     fs.linkSync(src, dest);
   }
 }
