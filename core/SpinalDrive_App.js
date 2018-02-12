@@ -29,22 +29,18 @@ class SpinalDrive_App {
   action(params) {}
 
 
-    log(params){
-	let authService = params.scope.injector.get('authService');
-	let username = authService.get_user().username;
-	var node = FileSystem._objects[params.file._server_id];
-  var actiontype = params.item.name;
-  let datestr = new Date;
-	var tab = {date: datestr.toLocaleString(),
-		   name: username,
-		   action: actiontype};
-	if (!node._info.log)
-	{
-	    node._info.add_attr({
-		log: []
-	    })
-	}
-	node._info.log.push(tab);
+    log(model, username, actiontype){
+      let datestr = new Date;
+      var tab = {date: datestr.toLocaleString(),
+          name: username,
+          action: actiontype};
+      if (!model._info.log)
+      {
+          model._info.add_attr({
+            log: []
+          })
+      }
+      model._info.log.push(tab);
     }
     
   /**
@@ -55,7 +51,12 @@ class SpinalDrive_App {
    */
   launch_action(params) {
     if (params.file)
-      this.log(params);
+    {
+      let authService = params.scope.injector.get('authService');
+      let username = authService.get_user().username;
+      var actiontype = params.item.name;
+      this.log(FileSystem._objects[params.file._server_id], username, actiontype);
+    }
 
     this.action(params);
   }
