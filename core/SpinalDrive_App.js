@@ -28,6 +28,25 @@ class SpinalDrive_App {
    */
   action(params) {}
 
+
+    log(params){
+	let authService = params.scope.injector.get('authService');
+	let username = authService.get_user().username;
+	var node = FileSystem._objects[params.file._server_id];
+  var actiontype = params.item.name;
+  let datestr = new Date;
+	var tab = {date: datestr.toLocaleString(),
+		   name: username,
+		   action: actiontype};
+	if (!node._info.log)
+	{
+	    node._info.add_attr({
+		log: []
+	    })
+	}
+	node._info.log.push(tab);
+    }
+    
   /**
    * Method called onclick will call this.action inside
    * 
@@ -35,7 +54,9 @@ class SpinalDrive_App {
    * @memberof SpinalDrive_App
    */
   launch_action(params) {
-    // this.log(params);
+    if (params.file)
+      this.log(params);
+
     this.action(params);
   }
 
