@@ -29,20 +29,21 @@ class SpinalDrive_App {
   action(params) {}
 
 
-    log(model, username, actiontype){
-      let datestr = new Date;
-      var tab = {date: datestr.toLocaleString(),
-          name: username,
-          action: actiontype};
-      if (!model._info.log)
-      {
-          model._info.add_attr({
-            log: []
-          })
-      }
-      model._info.log.push(tab);
+  log(model, username, actiontype) {
+    let datestr = Date.now();
+    var tab = {
+      date: datestr,
+      name: username,
+      action: actiontype
+    };
+    if (!model._info.log) {
+      model._info.add_attr({
+        log: []
+      });
     }
-    
+    model._info.log.push(tab);
+  }
+
   /**
    * Method called onclick will call this.action inside
    * 
@@ -50,8 +51,7 @@ class SpinalDrive_App {
    * @memberof SpinalDrive_App
    */
   launch_action(params) {
-    if (params.file)
-    {
+    if (params.file) {
       let authService = params.scope.injector.get('authService');
       let username = authService.get_user().username;
       var actiontype = params.item.name;
