@@ -28,20 +28,14 @@ class SpinalDrive_App {
    */
   action(params) {}
 
-
   log(model, username, actiontype) {
     let datestr = Date.now();
-    var tab = {
+    let tab = {
       date: datestr,
       name: username,
       action: actiontype
     };
-    if (!model._info.log) {
-      model._info.add_attr({
-        log: []
-      });
-    }
-    model._info.log.push(tab);
+    SpinalDrive_App._log(model._info, tab);
   }
 
   /**
@@ -57,7 +51,6 @@ class SpinalDrive_App {
       var actiontype = params.item.name;
       this.log(FileSystem._objects[params.file._server_id], username, actiontype);
     }
-
     this.action(params);
   }
 
@@ -71,5 +64,25 @@ class SpinalDrive_App {
     return true;
   }
 }
-SpinalDrive_App.SetLog = false;
+
+SpinalDrive_App._log = (_info, tab) => {
+  if (_info && !_info.log) {
+    let logs = new Lst();
+    _info.add_attr({
+      log: new Ptr(logs)
+    });
+    SpinalDrive_App._pushLog(logs, tab);
+  } else {
+    _info.log.load((logs) => {
+      if (logs) {
+        SpinalDrive_App._pushLog(logs, tab);
+      }
+    });
+  }
+};
+
+SpinalDrive_App._pushLog = (logsModel, tab) => {
+  logsModel.push(tab);
+};
+
 module.exports = SpinalDrive_App;
