@@ -35,7 +35,7 @@ class SpinalDrive_App {
       name: username,
       action: actiontype
     };
-    SpinalDrive_App._log(model._info, tab);
+    SpinalDrive_App._log(model, tab);
   }
 
   /**
@@ -65,20 +65,37 @@ class SpinalDrive_App {
   }
 }
 
-SpinalDrive_App._log = (_info, tab) => {
-  if (_info && !_info.log) {
-    let logs = new Lst();
-    _info.add_attr({
-      log: new Ptr(logs)
-    });
-    SpinalDrive_App._pushLog(logs, tab);
-  } else {
-    _info.log.load((logs) => {
-      if (logs) {
-        SpinalDrive_App._pushLog(logs, tab);
+SpinalDrive_App._getOrCreate_log = (file) => {
+  return new Promise((resolve, reject) => {
+    if (file && file._info) {
+      if (!file._info.log) {
+        let logs = new Lst();
+        file._info.add_attr({
+          log: new Ptr(logs)
+        });
+        resolve(logs);
+      } else {
+        file._info.log.load((logs) => {
+          if (logs) {
+            resolve(logs);
+          } else {
+            reject();
+          }
+        });
       }
+    } else {
+      reject();
+    }
+  });
+};
+
+SpinalDrive_App._log = (file, tab) => {
+  SpinalDrive_App._getOrCreate_log(file)
+    .then((logsModels) => {
+      SpinalDrive_App._pushLog(logsModels, tab);
+    }, () => {
+      console.error("error SpinalDrive_App._getOrCreate_log : model is not a File or doesn't have _info");
     });
-  }
 };
 
 SpinalDrive_App._pushLog = (logsModel, tab) => {
