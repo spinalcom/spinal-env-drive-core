@@ -1,6 +1,6 @@
 {
   "name": "spinal-env-drive-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "core class to create and add plugin in spinaldrive",
   "main": "index.js",
   "dependencies": {},
@@ -14,9 +14,5 @@
     "create_plugin_template": "create_plugin_template"
   },
   "author": "Laurent HA TAM DAN",
-  "license": "SEE LICENSE IN license.pdf",
-  "src": [
-    "main.js"
-  ],
-  "templates": []
+  "license": "SEE LICENSE IN license.pdf"
 }
