@@ -65,6 +65,36 @@ class SpinalDrive_App {
   }
 }
 
+
+SpinalDrive_App.ptrRdy_defer = (ptr, promise, isnew = false) => {
+  if (!ptr.data.value || FileSystem._tmp_objects[ptr.data.value]) {
+    setTimeout(() => {
+      SpinalDrive_App.ptrRdy_defer(ptr, promise, true);
+    }, 200);
+    return;
+  }
+  if (FileSystem._objects[ptr.data.value]) {
+    promise({
+      model: FileSystem._objects[ptr.data.value],
+      firstTime: isnew
+    });
+  } else {
+    ptr.load((m) => {
+      promise({
+        model: m,
+        firstTime: true
+      });
+    });
+  }
+};
+
+
+SpinalDrive_App.waitPtrRdy = (ptr) => {
+  return new Promise((resolve, reject) => {
+    SpinalDrive_App.ptrRdy_defer(ptr, resolve);
+  });
+};
+
 SpinalDrive_App._getOrCreate_log = (file) => {
   return new Promise((resolve, reject) => {
     if (file && file._info) {
@@ -75,7 +105,9 @@ SpinalDrive_App._getOrCreate_log = (file) => {
         });
         resolve(logs);
       } else {
-        file._info.log.load((logs) => {
+        SpinalDrive_App.waitPtrRdy(file._info.log).then((res) => {
+          let logs = res.model;
+          let firstTime = res.firstTime;
           if (logs) {
             resolve(logs);
           } else {
@@ -83,8 +115,6 @@ SpinalDrive_App._getOrCreate_log = (file) => {
           }
         });
       }
-    } else {
-      reject();
     }
   });
 };
