@@ -1,14 +1,16 @@
+require("spinal-core-connectorjs");
+
 /**
  * interface on an app
  */
 class SpinalDrive_App {
   /**
    * Creates an instance of SpinalDrive_App.
-   * @param {string} [name] 
-   * @param {string} [label] 
-   * @param {number} [id] 
-   * @param {string} [icon] 
-   * @param {string} [description] 
+   * @param {string} [name]
+   * @param {string} [label]
+   * @param {number} [id]
+   * @param {string} [icon]
+   * @param {string} [description]
    * @memberof SpinalDrive_App
    */
   constructor(name = "", label = "", id = 0, icon = "", description = "") {
@@ -22,11 +24,11 @@ class SpinalDrive_App {
   /**
    * Handler to the callback on click.
    * Method to be Overridden in child
-   * 
-   * @param {any} params 
+   *
+   * @param {any} params
    * @memberof SpinalDrive_App
    */
-  action(params) {}
+  action() {}
 
   log(model, username, actiontype) {
     let datestr = Date.now();
@@ -40,46 +42,49 @@ class SpinalDrive_App {
 
   /**
    * Method called onclick will call this.action inside
-   * 
-   * @param {any} params 
+   *
+   * @param {any} params
    * @memberof SpinalDrive_App
    */
   launch_action(params) {
     if (params.file) {
-      let authService = params.scope.injector.get('authService');
+      let authService = params.scope.injector.get("authService");
       let username = authService.get_user().username;
       var actiontype = params.item.name;
-      this.log(FileSystem._objects[params.file._server_id], username, actiontype);
+      this.log(
+        window.FileSystem._objects[params.file._server_id],
+        username,
+        actiontype
+      );
     }
     this.action(params);
   }
 
   /**
    * method to know if the app is needed to be shown.
-   * @param {Object} d object representing selection 
+   * @param {Object} d object representing selection
    * @returns {boolean} return true if need to be shown;
    * @memberof SpinalDrive_App
    */
-  is_shown(d) {
+  is_shown() {
     return true;
   }
 }
 
-
 SpinalDrive_App.ptrRdy_defer = (ptr, promise, isnew = false) => {
-  if (!ptr.data.value || FileSystem._tmp_objects[ptr.data.value]) {
+  if (!ptr.data.value || window.FileSystem._tmp_objects[ptr.data.value]) {
     setTimeout(() => {
       SpinalDrive_App.ptrRdy_defer(ptr, promise, true);
     }, 200);
     return;
   }
-  if (FileSystem._objects[ptr.data.value]) {
+  if (window.FileSystem._objects[ptr.data.value]) {
     promise({
-      model: FileSystem._objects[ptr.data.value],
+      model: window.FileSystem._objects[ptr.data.value],
       firstTime: isnew
     });
   } else {
-    ptr.load((m) => {
+    ptr.load(m => {
       promise({
         model: m,
         firstTime: true
@@ -88,26 +93,24 @@ SpinalDrive_App.ptrRdy_defer = (ptr, promise, isnew = false) => {
   }
 };
 
-
-SpinalDrive_App.waitPtrRdy = (ptr) => {
-  return new Promise((resolve, reject) => {
+SpinalDrive_App.waitPtrRdy = ptr => {
+  return new Promise(resolve => {
     SpinalDrive_App.ptrRdy_defer(ptr, resolve);
   });
 };
 
-SpinalDrive_App._getOrCreate_log = (file) => {
+SpinalDrive_App._getOrCreate_log = file => {
   return new Promise((resolve, reject) => {
     if (file && file._info) {
       if (!file._info.log) {
-        let logs = new Lst();
+        let logs = new window.Lst();
         file._info.add_attr({
-          log: new Ptr(logs)
+          log: new window.Ptr(logs)
         });
         resolve(logs);
       } else {
-        SpinalDrive_App.waitPtrRdy(file._info.log).then((res) => {
+        SpinalDrive_App.waitPtrRdy(file._info.log).then(res => {
           let logs = res.model;
-          let firstTime = res.firstTime;
           if (logs) {
             resolve(logs);
           } else {
@@ -120,12 +123,16 @@ SpinalDrive_App._getOrCreate_log = (file) => {
 };
 
 SpinalDrive_App._log = (file, tab) => {
-  SpinalDrive_App._getOrCreate_log(file)
-    .then((logsModels) => {
+  SpinalDrive_App._getOrCreate_log(file).then(
+    logsModels => {
       SpinalDrive_App._pushLog(logsModels, tab);
-    }, () => {
-      console.error("error SpinalDrive_App._getOrCreate_log : model is not a File or doesn't have _info");
-    });
+    },
+    () => {
+      console.error(
+        "error SpinalDrive_App._getOrCreate_log : model is not a File or doesn't have _info"
+      );
+    }
+  );
 };
 
 SpinalDrive_App._pushLog = (logsModel, tab) => {

@@ -7,15 +7,20 @@ class SpinalDrive_App_list {
   }
 
   is_valid_obj(obj) {
-    return (typeof obj.name != 'undefined' && typeof obj.label != 'undefined' && typeof obj.id != 'undefined' &&
-      typeof obj.icon != 'undefined' && typeof obj.description != 'undefined');
+    return (
+      typeof obj.name != "undefined" &&
+      typeof obj.label != "undefined" &&
+      typeof obj.id != "undefined" &&
+      typeof obj.icon != "undefined" &&
+      typeof obj.description != "undefined"
+    );
     // && typeof obj.appGroup != 'undefined' &&
     // typeof obj.extensions != 'undefined' && typeof obj.types != 'undefined'
   }
   /**
-   * 
-   * 
-   * @param {(SpinalDrive_App|any)} obj 
+   *
+   *
+   * @param {(SpinalDrive_App|any)} obj
    * @memberof SpinalDrive_App_list
    */
   push(obj) {
@@ -28,17 +33,19 @@ class SpinalDrive_App_list {
       }
       this._list.push(obj);
     } else
-      console.error("Error trying to Push not a SpinalDrive_App Object or equivalent.");
+      console.error(
+        "Error trying to Push not a SpinalDrive_App Object or equivalent."
+      );
   }
   /**
-   * 
-   * 
-   * @param {string} name 
+   *
+   *
+   * @param {string} name
    * @returns {boolean} false if nothing to delete
    * @memberof SpinalDrive_App_list
    */
   remove_by_name(name) {
-    if (typeof name != 'undefined') {
+    if (typeof name != "undefined") {
       for (var i = 0; i < this._list.length; i++) {
         if (name === this._list[i].name) {
           this._list.splice(i, 1);
@@ -49,14 +56,14 @@ class SpinalDrive_App_list {
     return false;
   }
   /**
-   * 
-   * 
-   * @param {number} id 
+   *
+   *
+   * @param {number} id
    * @returns {SpinalDrive_App}
    * @memberof SpinalDrive_App_list
    */
   remove_by_id(id) {
-    if (typeof id != 'undefined') {
+    if (typeof id != "undefined") {
       for (var i = 0; i < this._list.length; i++) {
         if (id === this._list[i].id) {
           this._list.splice(i, 1);
@@ -67,20 +74,19 @@ class SpinalDrive_App_list {
     return false;
   }
   /**
-   * 
-   * 
-   * @param {number} idx 
+   *
+   *
+   * @param {number} idx
    * @returns {SpinalDrive_App}
    * @memberof SpinalDrive_App_list
    */
   get(idx) {
-    if (typeof idx === 'undefined')
-      return this._list[idx];
+    if (typeof idx === "undefined") return this._list[idx];
     return this._list;
   }
   /**
-   * 
-   * 
+   *
+   *
    * @returns {number}
    * @memberof SpinalDrive_App_list
    */
@@ -88,9 +94,9 @@ class SpinalDrive_App_list {
     return this._list.length;
   }
   /**
-   * 
-   * 
-   * @param {string} name 
+   *
+   *
+   * @param {string} name
    * @returns {SpinalDrive_App} returns 0 on notfound.
    * @memberof SpinalDrive_App_list
    */

@@ -3,7 +3,10 @@
   "version": "v1.0.2",
   "description": "core class to create and add plugin in spinaldrive",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "spinal-core-connectorjs":
+      "git+https://github.com/spinalcom/spinal-core-connectorjs.git"
+  },
   "devDependencies": {},
   "bin": {
     "create_plugin_template": "create_plugin_template.js"
