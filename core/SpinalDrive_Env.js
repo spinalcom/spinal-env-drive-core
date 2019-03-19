@@ -37,13 +37,22 @@ class SpinalDrive_Env {
   get_applications(key, d) {
     if (!this.containerLst[key])
       this.containerLst[key] = new SpinalDrive_App_list();
-    return this.containerLst[key]._list
-      .filter(app => {
-        return app.is_shown(d);
+    return this.filterAsync(this.containerLst[key]._list, app => {
+      return app.is_shown(d);
+    }).sort(function(a, b) {
+      return a.order_priority < b.order_priority;
+    });
+  }
+  
+  filterAsync(arr, predicate){
+    const array = Array.from(arr);
+    
+    return Promise.all(arr.map((elt, index) => predicate(elt, index, array)))
+      .then(res => {
+        return array.filter((elt, index) => {
+          return res[index];
+        })
       })
-      .sort(function(a, b) {
-        return a.order_priority < b.order_priority;
-      });
   }
 }
 module.exports = SpinalDrive_Env;

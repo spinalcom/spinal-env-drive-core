@@ -63,11 +63,11 @@ class SpinalDrive_App {
   /**
    * method to know if the app is needed to be shown.
    * @param {Object} d object representing selection
-   * @returns {boolean} return true if need to be shown;
+   * @returns {Promise<boolean>} return true if need to be shown;
    * @memberof SpinalDrive_App
    */
   is_shown() {
-    return true;
+    return Promise.resolve(true);
   }
 }
 
