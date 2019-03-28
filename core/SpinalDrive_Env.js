@@ -26,7 +26,7 @@ class SpinalDrive_Env {
       this.containerLst[key] = new SpinalDrive_App_list();
     return this.containerLst[key].push(app);
   }
-
+  
   /**
    * get_applications
    *
@@ -37,13 +37,45 @@ class SpinalDrive_Env {
   get_applications(key, d) {
     if (!this.containerLst[key])
       this.containerLst[key] = new SpinalDrive_App_list();
-    return this.containerLst[key]._list
-      .filter(app => {
-        return app.is_shown(d);
-      })
-      .sort(function(a, b) {
+    return this.filterAsync(this.containerLst[key]._list, app => {
+      return app.is_shown(d);
+    }).then(res => {
+      
+     return res.sort(function(a, b) {
         return a.order_priority < b.order_priority;
       });
+    })
+  }
+  
+  /**
+   * Custom Promise all re
+   * @param promises {Promise[]} array of promises
+   * @return {Promise<Array>} returns a single Promise that resolves when all
+   * of the promises passed as an iterable have resolved or when the
+   * iterable contains no promises
+   static async customPromiseAll(promises){
+    const res = [];
+    for (let i = 0; i < promises.length; i++) {
+      try {
+        const result = await promises[i];
+        res.push(result);
+      }
+      catch ( e ) {
+        console.warn(e);
+      }
+    }
+    return res;
+  }*/
+  
+  filterAsync(arr, predicate){
+    const array = Array.from(arr);
+    
+    return Promise.all(arr.map(( elt, index) => predicate(elt, index, array)))
+      .then(res => {
+        return array.filter((elt, index) => {
+          return res[index];
+        })
+      })
   }
 }
 module.exports = SpinalDrive_Env;
