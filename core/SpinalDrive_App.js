@@ -67,7 +67,7 @@ class SpinalDrive_App {
    * @memberof SpinalDrive_App
    */
   is_shown() {
-    return true;
+    return Promise.resolve(true);
   }
 }
 
