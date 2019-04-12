@@ -1,4 +1,5 @@
 import { SpinalServiceAccessRight } from "spinal-service-access-rights-manger";
+import SpinalAdminInit from "spinal-env-admin-access-rights-manager";
 
 var SpinalDrive_App_list = require("./SpinalDrive_App_list");
 
@@ -23,20 +24,13 @@ class SpinalDrive_Env {
   init(authService, ngSpinalcore){
     this.authService = authService;
     this.spinalCore = ngSpinalcore;
-    this.accessRightService = new SpinalServiceAccessRight(ngSpinalcore, authService)
-    this.initialize = true;
+    this.accessRightService = new SpinalServiceAccessRight(ngSpinalcore, authService);
+    
+    
   }
   
   isInitialized(){
-    return new Promise(resolve => {
-      const interval = setInterval(()=> {
-        if (this.initialize){
-          clearInterval(interval);
-          resolve(this.initialize);
-        }
-      }, 200)
-    })
-    
+    return SpinalAdminInit;
   }
   
   /**
@@ -82,10 +76,8 @@ class SpinalDrive_Env {
   }
   
   
-  
   filterAsync(arr, predicate){
     const array = Array.from(arr);
-    
     return Promise.all(arr.map(( elt, index) => predicate(elt, index, array)))
       .then(res => {
         return array.filter((elt, index) => {
