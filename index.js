@@ -22,6 +22,8 @@
  * <http://resources.spinalcom.com/licenses.pdf>.
  */
 
+const angular = require('angular');
+
 module.exports = {};
 
 module.exports.SpinalDrive_App_list = require("./core/SpinalDrive_App_list");
@@ -29,3 +31,7 @@ module.exports.SpinalDrive_App = require("./core/SpinalDrive_App");
 module.exports.SpinalDrive_Env = require("./core/SpinalDrive_Env");
 var spinalDrive_Env = new module.exports.SpinalDrive_Env();
 if (window) window.spinalDrive_Env = spinalDrive_Env;
+
+angular.module('app.spinalcom').run(['authService', 'ngSpinalCore', function ( authService, ngSpinalCore ) {
+  window.spinalDrive_Env.init(authService, ngSpinalCore);
+} ]);

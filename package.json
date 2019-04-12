@@ -4,8 +4,8 @@
   "description": "core class to create and add plugin in spinaldrive",
   "main": "index.js",
   "dependencies": {
-    "spinal-core-connectorjs":
-      "git+https://github.com/spinalcom/spinal-core-connectorjs.git"
+    "spinal-core-connectorjs": "git+https://github.com/spinalcom/spinal-core-connectorjs.git",
+    "spinal-service-access-rights-manger": "https://github.com/spinalcom/spinal-service-access-right.git"
   },
   "devDependencies": {},
   "bin": {
