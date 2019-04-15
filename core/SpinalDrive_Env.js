@@ -18,34 +18,33 @@ class SpinalDrive_Env {
     };
     
     this.spinalCore = null;
-    this.initialize = false;
   }
   
-  init(authService, ngSpinalcore){
+  init(authService, ngSpinalcore, isAdmin){
     this.authService = authService;
     this.spinalCore = ngSpinalcore;
     this.accessRightService = new SpinalServiceAccessRight(ngSpinalcore, authService);
-    
-    
+    this.isAdmin = isAdmin;
   }
   
   isInitialized(){
-    return SpinalAdminInit;
+    return SpinalAdminInit.then(() => {return this.isAdmin});
   }
   
   /**
    * add_navbar_application.
    * @param {string} key key string of the layer: `FolderExplorer` or 'FileExplorer' or `Inspector` or `FileExplorerCurrDir`
    * @param {SpinalDrive_App | any} app should be an SpinalDrive_App
+   * @param {string} alias. AppProfile alias name
    * @memberof SpinalDrive_Env
    */
   add_applications(key, app, alias) {
     if (!alias){
       console.warn('deprecated');
     }
-    return this.isInitialized().then(() => {
+    return this.isInitialized().then((isAdmin) => {
       this.accessRightService.checkUserAccess(alias).then(res => {
-        if (res){
+        if (res || isAdmin){
           if (!this.containerLst[key])
             this.containerLst[key] = new SpinalDrive_App_list();
           return this.containerLst[key].push(app);
@@ -67,7 +66,9 @@ class SpinalDrive_Env {
     if (!this.containerLst[key])
       this.containerLst[key] = new SpinalDrive_App_list();
     return this.filterAsync(this.containerLst[key]._list, app => {
-      return app.is_shown(d, this.spinalCore);
+      return app.is_shown(d, this.spinalCore).then(res => {
+        return res || this.isAdmin;
+      })
     }).then(res => {
       return res.sort(function(a, b) {
         return a.order_priority < b.order_priority;
