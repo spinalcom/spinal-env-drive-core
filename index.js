@@ -32,6 +32,16 @@ module.exports.SpinalDrive_Env = require("./core/SpinalDrive_Env");
 var spinalDrive_Env = new module.exports.SpinalDrive_Env();
 if (window) window.spinalDrive_Env = spinalDrive_Env;
 
-angular.module('app.spinalcom').run(['authService', 'ngSpinalCore', function ( authService, ngSpinalCore ) {
-  window.spinalDrive_Env.init(authService, ngSpinalCore);
+angular.module('app.spinalcom').run(['authService', 'ngSpinalCore', '$http', function ( authService, ngSpinalCore, $http ) {
+  const user = authService.get_user();
+  let url = "/get_admin_id";
+  
+  $http.get(url + "?u=" + user.username + "&p=" + user.password).then(
+    data =>  {
+      return parseInt(data.data) !== -1;
+    }
+  ).then((isAdmin) => {
+    window.spinalDrive_Env.init(authService, ngSpinalCore, isAdmin);
+  })
+  
 } ]);
